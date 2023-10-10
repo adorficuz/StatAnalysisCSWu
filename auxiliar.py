@@ -8,6 +8,15 @@ def strdifference(str1, str2):
         else:
             break
     return str(list2)
+def reversetilslash(str):
+    revstr = str[::-1]
+    res = ''
+    for i in revstr:
+        if i == '/':
+            break
+        else:
+            res + i
+    return res
 def remove_blank_spaces(l):
     l2 = list()
     for i in l:
@@ -99,3 +108,4 @@ def get_2_cites_site(ref):
     myElem4 = WebDriverWait(driver, 2)
     htmlf = driver.page_source
     return htmlf
+
