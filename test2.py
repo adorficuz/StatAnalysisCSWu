@@ -174,10 +174,10 @@ def get_2_cites_site(driver, ref):
         myElem0 = WebDriverWait(driver2cites, 10000).until(
             EC.presence_of_element_located((By.XPATH, "//ul[@class='pagination']")))
     return driver2cites
-def ref_itemNtype(item):
+def ref_itemNtypeNdate(item):
     datext = item.find_element(By.XPATH, ".//h6[@class='citation']").text
     date = int(datext[-4:-1] + datext[-1])
-    if date >= 1997 :
+    if date >= 1990 :
         resp = ''
     else:
         try:
@@ -196,7 +196,7 @@ def ref_itemNtype(item):
                 else:
                     tipo += i
             ref_number = reversetilslash(urleach)
-            resp = [ref_number, tipo]
+            resp = [ref_number, tipo, date]
         except NoSuchElementException:
             resp = ''
     return resp
@@ -214,7 +214,7 @@ def authors_each_cite(driver,item):
     except NoSuchElementException:
         pass
     return dictauthors
-def cites(ref):
+def cites(ref,d):
     start_time = time.time()
     options = webdriver.ChromeOptions()
     options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
@@ -226,14 +226,18 @@ def cites(ref):
     paginationcites = paginationc.find_elements_by_xpath(".//li")
     numpgs = int((paginationcites[-2]).find_element_by_xpath(".//a").text)
     l1 = list()
-    for i in itemscites:
-        try:
-            l1.append(authors_each_cite(driver,i))
-        except NoSuchElementException:
-            pass
     if numpgs == 1:
-        pass
+        for i in itemscites:
+            try:
+                l1.append(authors_each_cite(driver, i))
+            except NoSuchElementException:
+                pass
     else:
+        for i in itemscites:
+            try:
+                l1.append(authors_each_cite(driver, i))
+            except NoSuchElementException:
+                pass
         for i in range(2, numpgs + 1):
             urlpg = f'https://journals.aps.org/{ref[1]}/cited-by/10.1103/{ref[0]}?page={i}'
             drivercites.get(urlpg)
@@ -247,20 +251,24 @@ def cites(ref):
                     pass
     driver.quit()
     drivercites.quit()
-    return l1
-def refs_per_page(driverref,int):
+    d[ref[2]].append(l1)
+    return d
+def refsNdates_per_page(driverref, int):
     urlrefs = f'https://journals.aps.org/search/results?sort=relevance&clauses=%5B%7B%22field%22:%22author%22,%22value%22:%22C+S+Wu%22,%22operator%22:%22AND%22%7D%5D&page={int}'
     driverref.get(urlrefs)
     driverref.maximize_window()
     myElem2 = WebDriverWait(driverref, 30).until(
         EC.visibility_of_element_located((By.XPATH, "//div[@class='large-9 columns search-results ofc-main']")))
     srpg = driverref.find_elements(By.XPATH, "//div[@class='article panel article-result']")
-    refspg = list(map(ref_itemNtype, srpg))
+    refspg = list(map(ref_itemNtypeNdate, srpg))
     return refspg
 driverres = turnon()
+d = dict()
+for i in range(1940,1990):
+    d[i] = list()
 refs0 = list()
 for i in range(1,7):
-    refs0 += refs_per_page(driverres,i)
+    refs0 += refsNdates_per_page(driverres,i)
 
 refs = list()
 for i in refs0:
@@ -270,4 +278,6 @@ for i in refs0:
         refs.append(i)
 driverres.quit()
 #res = list(map(cites,refs))
-res = list(map(cites,refs))
+for i in range(1,len(refs)+1):
+    d = cites(refs[i-1],d)
+
