@@ -34,15 +34,18 @@ for i,xi in enumerate(x.flatten()):
 dz = np.array(dz)
 z = dz.reshape(ly.shape[0],lx.shape[0])
 
+g = 3
+med = z.max()/2
+div = 2500
 def _forward(x):
-    return (x-20)**3 - (z.min()-20)**3
+    return ((x-med)**g - (z.min()-med)**g)/div
 
 def _inverse(x):
-    return (x+(z.min()-20)**3)**(1/3) + 20
+    return (div*x+(z.min()-med)**g)**(1/g) + med
 
 
 fig, ax = plt.subplots()
 norm = FuncNorm((_forward, _inverse), vmin=z.min(), vmax=z.max())
-pcm = ax.pcolormesh(x, y, z, norm=norm, cmap='jet', shading='auto')
-ax.set_title('FuncNorm(x)')
+pcm = ax.pcolormesh(x, y, z, norm=norm, cmap='turbo', shading='auto')
+ax.set_title('Evolución del carácter prolífico del trabajo de Wu')
 plt.show()

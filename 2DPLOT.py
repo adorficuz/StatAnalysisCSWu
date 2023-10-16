@@ -70,27 +70,16 @@ for i in range(0,4):
     popt2[i] = popt[4+i]
 
 
-for j in range(2023,2051):
-    Dated[j] = 0
 
-Pred = dict()
-
-for i in range(1940,2023):
-    Pred[i] = 0
-
-for i in range(2023,2051):
-    Pred[i] = weib(i,*popt)
-
-myline = np.linspace(1940,2051,1000)
+myline = np.linspace(1940,2023,1000)
 histo = plt.bar(list(Dated.keys()),list(Dated.values()),width=1,color='blue',label='citas anuales')
-histo1 = plt.bar(list(Pred.keys()),list(Pred.values()),width=1,color='green',label='predicción local')
 plt.plot(myline,weib(myline,*popt),color='red')
 
 plt.plot(myline,weib1(myline,*popt1),'k--')
 plt.plot(myline,weib1(myline,*popt2),'k--')
 
 paperdates = dict()
-for i in range(1940,1990):
+for i in range(1940,1989):
     paperdates[i] = 10* m.paperdates[i]
 
 histo2 = plt.bar(list(paperdates.keys()),list(paperdates.values()),width=1,color='red',alpha=0.3,label='10*publicaciones anuales')

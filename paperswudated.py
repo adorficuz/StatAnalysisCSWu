@@ -65,7 +65,7 @@ def papers_per_page(driverref,ent,dict):
     srpg = driverref.find_elements(By.XPATH, "//div[@class='article panel article-result']//div[@class='row']//div[@class='large-9 columns']//h6[@class='citation']")
     for i in srpg:
         idate = int(i.text[-4:-1] + i.text[-1])
-        if idate >= 1990:
+        if idate >= 1989:
             continue
         else:
             dict[idate] += 1
@@ -74,7 +74,7 @@ def papers_per_page(driverref,ent,dict):
 driverres = turnon()
 refs0 = list()
 paperdates = dict()
-for i in range(1940,1990):
+for i in range(1940,1989):
     paperdates[i] = 0
 for i in range(1,7):
     paperdates = papers_per_page(driverres,i,paperdates)

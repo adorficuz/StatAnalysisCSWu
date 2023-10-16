@@ -177,7 +177,7 @@ def get_2_cites_site(driver, ref):
 def ref_itemNtypeNdate(item):
     datext = item.find_element(By.XPATH, ".//h6[@class='citation']").text
     date = int(datext[-4:-1] + datext[-1])
-    if date >= 1990 :
+    if date >= 1986 :
         resp = ''
     else:
         try:
@@ -264,7 +264,7 @@ def refsNdates_per_page(driverref, int):
     return refspg
 driverres = turnon()
 d = dict()
-for i in range(1940,1990):
+for i in range(1940,1986):
     d[i] = list()
 refs0 = list()
 for i in range(1,7):
